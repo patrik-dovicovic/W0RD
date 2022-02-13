@@ -24,7 +24,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.json());
 app.listen(80);
-
+console.log("ok")
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/', 'new.html'));
     console.log("server is running")

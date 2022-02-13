@@ -1,0 +1,227 @@
+:root{
+    --color-1:#000000;
+    --color-2:#000000;
+    --color-3:#000000;
+    --color-4:#000000;
+    --color-5:#000000;
+    --color-6:#000000;
+    --color-7:#000000;
+    --color-8:#000000;
+    --header-height: 50px;
+    --keyboard-height: 200px;
+    --game-max-width: 500px;
+    font-size: 16px;
+}
+
+::selection {
+    background: transparent;
+}
+
+::-moz-selection {
+    background: transparent;
+}
+
+* {
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}
+
+body {
+    touch-action: manipulation;
+}
+    #incorrect{
+        display: none;
+        position: absolute;
+        font-size: 14px;
+        border: none;
+        top: 20vh;
+        left: 50vw;
+        background-color: #4c4c4c;
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 15px 5px;
+        border-radius: 1rem;
+        width: 250px;
+        margin-left: -125px;
+        text-align: center;
+    }
+
+    #game{
+        height: 100%;
+        width: 100vw;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+        #game-board-container{
+            max-width: var(--game-max-width);
+            margin: auto;
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+            game-board {
+                display: flex;
+                flex-wrap: nowrap;
+                background-color: white;
+                width: 330px;
+                grid-gap: 5px;
+                flex-direction: column;
+                margin: 0 auto;
+            }
+
+                game-line {
+                    width: 330px;
+                    line-height: 75px;
+                    text-align: center;
+                    display: flex;
+
+                }
+
+                    game-tile {
+                        background-color: #a7a5a5;
+                        border: none;
+                        box-sizing: border-box;
+                        width: 37vw;
+                        height: 37vw;
+                        max-height: 56px;
+                        max-width: 56px;
+                        margin: 0 5px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 38px;
+                        color: white;
+                        font-family: 'Archivo', sans-serif;
+                    }
+
+                    
+
+        #keyboard-container{
+            width: 100vw;
+            max-width: var(--game-max-width);
+            margin: auto;
+            height: 200px;
+        }
+            game-keyboard{
+                width: 80vw;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 30px ;
+                padding: 0;
+                max-width: 430px;
+
+            }
+                keyboard-1row,keyboard-2row,keyboard-3row,keyboard-4row{
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                }
+
+                    button {
+                        background-color: #767678;
+                        height: 20vw;
+                        width: 3.9vw;
+                        width: 100%;
+                        max-height: 43px;
+                        color: white;
+                        border: none;
+                        border-radius: 0.4rem;
+                    }
+
+                    .wide-button {
+                        max-width: 60px !important;
+                    }
+
+                    keyboard-1row button{
+                        margin: 1px;
+                        max-width: 30px;
+                    }
+                    keyboard-2row button{
+                        margin: 3px;
+                        max-width: 35px;
+                    }
+                    keyboard-3row button{
+                        margin: 3px;
+                        max-width: 38px;
+                    }
+                    keyboard-4row button{
+                        margin: 3px;
+                        max-width: 30px;
+                    }
+
+
+@media only screen and (max-width: 350px){
+    game-board {
+        width: 230px;
+    }game-line {
+        width: 230px;
+    }game-tile {
+        max-height: 40px;
+        max-width: 40px;
+        margin: 0 3px;
+        font-size: 38px;
+    }
+
+    button {
+        max-height: 35px;
+    }
+
+    keyboard-1row button{
+        margin: 1px;
+        max-width: 30px;
+    }
+    keyboard-2row button{
+        margin: 1px;
+        max-width: 35px;
+    }
+    keyboard-3row button{
+        margin: 2px;
+        max-width: 38px;
+    }
+    keyboard-4row button{
+        margin: 2px;
+        max-width: 35px;
+    }
+}
+
+@media only screen and (max-width: 265px){
+    game-board {
+        width: 145px;
+    }game-line {
+        width: 145px;
+    }game-tile {
+        max-height: 25px;
+        max-width: 25px;
+        margin: 0 2px;
+        font-size: 38px;
+    }
+
+    button {
+        max-height: 35px;
+    }
+
+    keyboard-1row button{
+        margin: 1px;
+        max-width: 17px;
+    }
+    keyboard-2row button{
+        margin: 1px;
+        max-width: 20px;
+    }
+    keyboard-3row button{
+        margin: 2px;
+        max-width: 22px;
+    }
+    keyboard-4row button{
+        margin: 2px;
+        max-width: 20px;
+    }
+}

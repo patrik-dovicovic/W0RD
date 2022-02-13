@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>W0RD</title>
+    <style>
+        :root {
+            --app-height: 100%;
+        }
+
+        ::selection {
+            background: transparent;
+        }
+
+        ::-moz-selection {
+            background: transparent;
+        }
+
+        * {
+            -webkit-appearance: none;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            height: var(--app-height);
+            touch-action: manipulation;
+            position: relative;
+        }
+
+        #game {
+            width: 100%;
+            max-width: 500px;
+            height: -webkit-fill-available;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        #game-board-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+
+        }
+
+        game-board {
+            display: flex;
+            flex-wrap: nowrap;
+            background-color: white;
+            width: 330px;
+            grid-gap: 5px;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+
+        game-line {
+            width: 330px;
+            line-height: 75px;
+            text-align: center;
+            display: flex;
+
+        }
+
+        game-tile {
+            background-color: #a7a5a5;
+            /* background-color: #868686; */
+            border: none;
+            box-sizing: border-box;
+            width: 17vw;
+            height: 17vw;
+            max-height: 56px;
+            max-width: 56px;
+            margin: 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 38px;
+            color: white;
+            font-family: 'Archivo', sans-serif;
+        }
+
+        #keyboard {
+            width: 80vw;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 30px;
+            padding: 0;
+            max-width: 430px;
+
+        }
+
+        .top-line,
+        .middle-top-line,
+        .middle-bottom-line,
+        .bottom-line {
+            text-align: center;
+            width: 100%;
+            max-height: 12vw;
+            min-height: 35px;
+        }
+
+        .middle-top-line button,
+        .middle-bottom-line button,
+        .bottom-line button,
+        .top-line button {
+            background-color: #767678;
+            width: 100%;
+            height: 20vw;
+            max-height: 43px;
+            color: white;
+            border: none;
+            border-radius: 0.4rem;
+
+        }
+
+        .top-line button {
+            margin: -1px;
+            max-width: 30px;
+        }
+
+        .middle-top-line button {
+            margin: 3px;
+            max-width: 35px;
+        }
+
+        .middle-bottom-line button {
+            margin: 3px;
+            max-width: 38px;
+        }
+
+        .bottom-line button {
+            margin: 3px;
+            max-width: 35px;
+        }
+
+        .wide-button {
+            max-width: 60px !important;
+        }
+
+        button:focus {
+            background-color: #868686;
+        }
+
+        #incorrect {
+            display: none;
+            position: absolute;
+            font-size: 14px;
+            border: none;
+            top: 20vh;
+            left: 50vw;
+            background-color: #4c4c4c;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 15px 5px;
+            border-radius: 1rem;
+            width: 250px;
+            margin-left: -125px;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 520px) {
+            .middle-top-line button {
+                width: 7.8vw;
+            }
+
+            .middle-bottom-line button {
+                width: 8.5vw;
+
+            }
+
+            .bottom-line button {
+                width: 7.5vw;
+
+            }
+
+            .top-line button {
+                width: 6.7vw;
+
+            }
+
+            #keyboard {
+                width: 100vw;
+
+            }
+
+            .wide-button {
+                width: 100vw !important;
+                max-width: 12vw !important;
+            }
+
+        }
+        /* @media only screen and (max-width: 340px) {
+            game-board{
+                width: 250px;
+                height: 250px;
+            }
+            game-line{
+                width: 250px;
+            }
+            .middle-top-line button,
+            .middle-bottom-line button,
+            .bottom-line button,
+            .top-line button {
+                max-height: 30px;
+            }
+        }
+        @media only screen and (max-height: 620px) {
+            .middle-top-line button,
+            .middle-bottom-line button,
+            .bottom-line button,
+            .top-line button {
+                height: 7vh;
+                max-height: 7vh;
+            }
+
+            #keyboard{
+                margin-bottom: 0 ;
+            }
+
+            game-board{
+                width: 250px;
+                height: 250px;
+            }
+            game-line{
+                width: 250px;
+            }
+        } */
+    </style>
+
+</head>
+<body>
+    <div id="incorrect">Slovo sa nenašlo v slovníku</div>
+    <div id="game">
+        <div id="game-board-container">
+            <game-board>
+                <game-line>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+
+                </game-line>
+                <game-line>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                </game-line>
+                <game-line>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+
+                </game-line>
+                <game-line>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                </game-line>
+                <game-line>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+
+                </game-line>
+                <game-line>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                    <game-tile></game-tile>
+                </game-line>
+            </game-board>
+        </div>
+
+        <div id="keyboard">
+            <div class="top-line">
+                <button class="top-line2" onclick="pressed(id)" id="ď">ď</button>
+                <button class="top-line2" onclick="pressed(id)" id="ŕ">ŕ</button>
+                <button class="top-line2" onclick="pressed(id)" id="ľ">ľ</button>
+                <button class="top-line2" onclick="pressed(id)" id="š">š</button>
+                <button class="top-line2" onclick="pressed(id)" id="č">č</button>
+                <button class="top-line2" onclick="pressed(id)" id="ť">ť</button>
+                <button class="top-line2" onclick="pressed(id)" id="ž">ž</button>
+                <button class="top-line2" onclick="pressed(id)" id="ý">ý</button>
+                <button class="top-line2" onclick="pressed(id)" id="á">á</button>
+                <button class="top-line2" onclick="pressed(id)" id="í">í</button>
+                <button class="top-line2" onclick="pressed(id)" id="é">é</button>
+                <button class="top-line2" onclick="pressed(id)" id="ú">ú</button>
+                <button class="top-line2" onclick="pressed(id)" id="ň">ň</button>
+
+                <!-- <button class="top-line2" onclick="pressed(id)" id="ä">ä</button> -->
+                <!-- <button class="top-line2" onclick="pressed(id)" id="ó">ó</button> -->
+                <!-- <button class="top-line2" onclick="pressed(id)" id="ô">ô</button> -->
+                <!-- <button class="top-line2" onclick="pressed(id)" id="ĺ">ĺ</button> -->
+
+            </div>
+            <div class="middle-top-line"><button onclick="pressed(id)" id="q">Q</button><button onclick="pressed(id)"
+                    id="w">W</button><button onclick="pressed(id)" id="e">E</button><button onclick="pressed(id)"
+                    id="r">R</button><button onclick="pressed(id)" id="t">T</button><button onclick="pressed(id)"
+                    id="y">Y</button><button onclick="pressed(id)" id="u">U</button><button onclick="pressed(id)"
+                    id="i">I</button><button onclick="pressed(id)" id="o">O</button><button onclick="pressed(id)"
+                    id="p">P</button></div>
+            <div class="middle-bottom-line"><button onclick="pressed(id)" id="a">A</button><button onclick="pressed(id)"
+                    id="s">S</button><button onclick="pressed(id)" id="d">D</button><button onclick="pressed(id)"
+                    id="f">F</button><button onclick="pressed(id)" id="g">G</button><button onclick="pressed(id)"
+                    id="h">H</button><button onclick="pressed(id)" id="j">J</button><button onclick="pressed(id)"
+                    id="k">K</button><button onclick="pressed(id)" id="l">L</button>
+                <!-- <button onclick="diakritika(id)" id="dĺžeň">&#180</button> -->
+            </div>
+            <div class="bottom-line"><button class="wide-button" onclick="send_answers()" id="↵"
+                    style="background-color: #047bfb;color: white;">enter</button><button onclick="pressed(id)"
+                    id="z">Z</button><button onclick="pressed(id)" id="x">X</button><button onclick="pressed(id)"
+                    id="c">C</button><button onclick="pressed(id)" id="v">V</button><button onclick="pressed(id)"
+                    id="b">B</button><button onclick="pressed(id)" id="n">N</button><button onclick="pressed(id)"
+                    id="m">M</button><button class="wide-button" onclick="delete_last_letter()" id="←"
+                    style="background-color: #4f4f51;color: white;">←</button>
+                <!-- <button onclick="diakritika(id)" id="mäkčeň">ˇ</button> -->
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var words = []
+    var letters_in_line = []
+    var row = 1
+    tiles = document.querySelectorAll("game-tile")
+
+    //send guess to server
+    function send_answers() {
+        if (letters_in_line.length == 5) {
+            var guess = letters_in_line.join("")
+            var check_answers = new XMLHttpRequest();
+            check_answers.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    change_color_tile(this.response)
+                }
+            };
+            check_answers.open("POST", "/check", true);
+            check_answers.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+            check_answers.send(JSON.stringify([{ "guess": guess }]))
+        }
+    }
+
+    //pressed letter on keyboard and enter to tile
+    function pressed(letter) {
+        if (letters_in_line.length < 5 && letter != "←" && letter != "↵") {
+            letters_in_line.push(letter)
+            tiles[(words.length * 5) + letters_in_line.length - 1].innerHTML = letter.toUpperCase()
+            tiles[(words.length * 5) + letters_in_line.length - 1].style.border = "solid black 2px"
+        }
+    }
+    //delete last letter
+    function delete_last_letter() {
+        letters_in_line.pop()
+        tiles[(words.length * 5) + letters_in_line.length].innerHTML = ""
+        tiles[(words.length * 5) + letters_in_line.length].style.border = "none"
+    }
+
+    //change color of tile
+    function change_color_tile(response) {
+        if (response != "incorrect") {
+            var correct = JSON.parse(response).position
+            console.log(correct)
+            var contain = JSON.parse(response).contain
+            console.log(contain)
+            for (let i = 0; i < 5; i++){
+                tiles[(words.length * 5) + i].style.backgroundColor = "#5e5e5e";
+                tiles[(words.length * 5) + i].style.border = "none"
+            }
+            for (le of correct) {
+                if (le != "-") {
+                    tiles[(words.length * 5) + correct.indexOf(le)].style.backgroundColor = "green";
+                }
+            }
+            for (le of contain) {
+                tiles[(words.length * 5) + letters_in_line.indexOf(le)].style.backgroundColor = "orange";
+            }
+            words.push(letters_in_line)
+            letters_in_line = []
+            row++
+        } else {
+            document.getElementById("incorrect").style.display = "initial"
+            setTimeout(function () {
+                document.getElementById("incorrect").style.display = "none"
+            }, 1500);
+        }
+    }
+
+
+    //change height of device (safari 100vh bug)
+    const appHeight = () => {
+        const doc = document.documentElement
+        doc.style.setProperty('--app-height', `${window.innerHeight}px`)
+    }
+    window.addEventListener('resize', appHeight)
+    appHeight()
+
+
+</script>
+
+</html>

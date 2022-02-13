@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W0RD</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --app-height: 100%;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            height: var(--app-height);
+        }
+    </style>
+</head>
+
+<body>
+    <game-app>
+        <div id="incorrect">Slovo sa nenašlo v slovníku</div>
+        <div id="game">
+            <div id="game-board-container">
+                <game-board id="game-board"></game-board>
+            </div>
+            <div id="keyboard-container">
+                <game-keyboard>
+                    <keyboard-1row>
+                        <button onclick="pressed(id)" id="ď">ď</button>
+                        <button onclick="pressed(id)" id="ŕ">ŕ</button>
+                        <button onclick="pressed(id)" id="ľ">ľ</button>
+                        <button onclick="pressed(id)" id="š">š</button>
+                        <button onclick="pressed(id)" id="č">č</button>
+                        <button onclick="pressed(id)" id="ť">ť</button>
+                        <button onclick="pressed(id)" id="ž">ž</button>
+                        <button onclick="pressed(id)" id="ý">ý</button>
+                        <button onclick="pressed(id)" id="á">á</button>
+                        <button onclick="pressed(id)" id="í">í</button>
+                        <button onclick="pressed(id)" id="é">é</button>
+                        <button onclick="pressed(id)" id="ú">ú</button>
+                        <button onclick="pressed(id)" id="ň">ň</button>
+                    </keyboard-1row>
+                    <keyboard-2row>
+                        <button onclick="pressed(id)" id="q">Q</button>
+                        <button onclick="pressed(id)" id="w">W</button>
+                        <button onclick="pressed(id)" id="e">E</button>
+                        <button onclick="pressed(id)" id="r">R</button>
+                        <button onclick="pressed(id)" id="t">T</button>
+                        <button onclick="pressed(id)" id="y">Y</button>
+                        <button onclick="pressed(id)" id="u">U</button>
+                        <button onclick="pressed(id)" id="i">I</button>
+                        <button onclick="pressed(id)" id="o">O</button>
+                        <button onclick="pressed(id)" id="p">P</button>
+                    </keyboard-2row>
+                    <keyboard-3row>
+                        <button onclick="pressed(id)" id="a">A</button>
+                        <button onclick="pressed(id)" id="s">S</button>
+                        <button onclick="pressed(id)" id="d">D</button>
+                        <button onclick="pressed(id)" id="f">F</button>
+                        <button onclick="pressed(id)" id="g">G</button>
+                        <button onclick="pressed(id)" id="h">H</button>
+                        <button onclick="pressed(id)" id="j">J</button>
+                        <button onclick="pressed(id)" id="k">K</button>
+                        <button onclick="pressed(id)" id="l">L</button>
+                    </keyboard-3row>
+                    <keyboard-4row>
+                        <button class="wide-button" onclick="send_answers()" id="↵"
+                            style="background-color: #047bfb;color: white;">enter</button>
+                        <button onclick="pressed(id)" id="z">Z</button>
+                        <button onclick="pressed(id)" id="x">X</button>
+                        <button onclick="pressed(id)" id="c">C</button>
+                        <button onclick="pressed(id)" id="v">V</button>
+                        <button onclick="pressed(id)" id="b">B</button>
+                        <button onclick="pressed(id)" id="n">N</button>
+                        <button onclick="pressed(id)" id="m">M</button>
+                        <button class="wide-button" onclick="delete_last_letter()" id="←"
+                            style="background-color: #4f4f51;color: white;">←</button>
+                    </keyboard-4row>
+                </game-keyboard>
+            </div>
+        </div>
+    </game-app>
+</body>
+<script>
+    var rows = 5
+    var letters_in_row = 5
+    for (let i = 0; i < rows; i++) {
+        document.getElementById('game-board').innerHTML = document.getElementById('game-board').innerHTML + `
+            <game-line id="game-line-${i + 1}"></game-line>
+        `
+        for (let j = 0; j < letters_in_row; j++) {
+            document.getElementById(`game-line-${i + 1}`).innerHTML = document.getElementById(`game-line-${i + 1}`).innerHTML + `
+            <game-tile></game-tile>
+            `
+        }
+    }
+    //---------------
+    var words = []
+    var letters_in_line = []
+    var row = 1
+    tiles = document.querySelectorAll("game-tile")
+
+    //send guess to server
+    function send_answers() {
+        if (letters_in_line.length == 5) {
+            var guess = letters_in_line.join("")
+            var check_answers = new XMLHttpRequest();
+            check_answers.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    change_color_tile(this.response)
+                }
+            };
+            check_answers.open("POST", "/check", true);
+            check_answers.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+            check_answers.send(JSON.stringify([{ "guess": guess }]))
+        }
+    }
+
+    //pressed letter on keyboard and enter to tile
+    function pressed(letter) {
+        if (letters_in_line.length < 5 && letter != "←" && letter != "↵") {
+            letters_in_line.push(letter)
+            tiles[(words.length * 5) + letters_in_line.length - 1].innerHTML = letter.toUpperCase()
+            tiles[(words.length * 5) + letters_in_line.length - 1].style.border = "solid black 2px"
+        }
+    }
+    //delete last letter
+    function delete_last_letter() {
+        letters_in_line.pop()
+        tiles[(words.length * 5) + letters_in_line.length].innerHTML = ""
+        tiles[(words.length * 5) + letters_in_line.length].style.border = "none"
+    }
+
+    //change color of tile
+    function change_color_tile(response) {
+        if (response != "incorrect") {
+            var correct = JSON.parse(response).position
+            console.log(correct)
+            var contain = JSON.parse(response).contain
+            console.log(contain)
+            for (let i = 0; i < 5; i++) {
+                tiles[(words.length * 5) + i].style.backgroundColor = "#5e5e5e";
+                tiles[(words.length * 5) + i].style.border = "none"
+            }
+            for (le of correct) {
+                if (le != "-") {
+                    tiles[(words.length * 5) + correct.indexOf(le)].style.backgroundColor = "green";
+                }
+            }
+            for (le of contain) {
+                tiles[(words.length * 5) + letters_in_line.indexOf(le)].style.backgroundColor = "orange";
+            }
+            words.push(letters_in_line)
+            letters_in_line = []
+            row++
+        } else {
+            document.getElementById("incorrect").style.display = "initial"
+            setTimeout(function () {
+                document.getElementById("incorrect").style.display = "none"
+            }, 1500);
+        }
+    }
+
+
+    //change height of device (safari 100vh bug)
+    const appHeight = () => {
+        const doc = document.documentElement
+        doc.style.setProperty('--app-height', `${window.innerHeight}px`)
+    }
+    window.addEventListener('resize', appHeight)
+    appHeight()
+
+
+
+</script>
+
+</html>
